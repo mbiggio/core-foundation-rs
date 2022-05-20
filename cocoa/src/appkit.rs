@@ -367,6 +367,14 @@ pub enum NSWindowButton {
 
 #[repr(u64)]
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub enum NSWindowSharingType {
+    NSWindowSharingNone            = 0,
+    NSWindowSharingReadOnly        = 1,
+    NSWindowSharingReadWrite       = 2,
+}
+
+#[repr(u64)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum NSBezelStyle {
     NSRoundedBezelStyle            = 1,
     NSRegularSquareBezelStyle      = 2,
@@ -996,6 +1004,10 @@ pub trait NSWindow: Sized {
     unsafe fn contentResizeIncrements(self) -> NSSize;
     unsafe fn setContentResizeIncrements_(self, contentResizeIncrements: NSSize);
 
+    // Managing Window Access Permissions from External Processes
+    unsafe fn sharingType(self) -> NSWindowSharingType;
+    unsafe fn setSharingType_(self, sharingType: NSWindowSharingType);
+
     // Managing Window Visibility and Occlusion State
     unsafe fn isVisible(self) -> BOOL; // NOTE: Deprecated in 10.9
     unsafe fn occlusionState(self) -> NSWindowOcclusionState;
@@ -1461,6 +1473,15 @@ impl NSWindow for id {
 
     unsafe fn setContentResizeIncrements_(self, contentResizeIncrements: NSSize) {
         msg_send![self, setContentResizeIncrements:contentResizeIncrements]
+    }
+
+    // Managing Window Access Permissions from External Processes
+    unsafe fn sharingType(self) -> NSWindowSharingType {
+        msg_send![self, sharingType]
+    }
+
+    unsafe fn setSharingType_(self, sharingType: NSWindowSharingType) {
+        msg_send![self, setSharingType:sharingType]
     }
 
     // Managing Window Visibility and Occlusion State
